@@ -7,9 +7,14 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Data;
 using System.Threading.Tasks;
-using Kusto.Language;
+using Microsoft.Kusto.ServiceLayer.Admin.Contracts;
+using Microsoft.Kusto.ServiceLayer.Connection.Contracts;
+using Microsoft.Kusto.ServiceLayer.DataSource.Intellisense;
 using Microsoft.Kusto.ServiceLayer.Utility;
 using Microsoft.Kusto.ServiceLayer.DataSource.Metadata;
+using Microsoft.Kusto.ServiceLayer.LanguageServices;
+using Microsoft.Kusto.ServiceLayer.LanguageServices.Contracts;
+using Microsoft.Kusto.ServiceLayer.Workspace.Contracts;
 
 namespace Microsoft.Kusto.ServiceLayer.DataSource
 {
@@ -88,6 +93,17 @@ namespace Microsoft.Kusto.ServiceLayer.DataSource
         public abstract string GenerateAlterFunctionScript(string functionName);
 
         public abstract string GenerateExecuteFunctionScript(string functionName);
+        public abstract ScriptFileMarker[] GetSemanticMarkers(ScriptParseInfo parseInfo, ScriptFile scriptFile, string queryText);
+
+        public abstract DefinitionResult GetDefinition(string queryText, int index, int startLine, int startColumn, bool throwOnError = false);
+
+        public abstract Hover GetHoverHelp(ScriptDocumentInfo scriptDocumentInfo, Position textPosition, bool throwOnError = false);
+
+        public abstract CompletionItem[] GetAutoCompleteSuggestions(ScriptDocumentInfo scriptDocumentInfo, Position textPosition,
+            bool throwOnError = false);
+
+        public abstract ListDatabasesResponse GetDatabases(string serverName, bool includeDetails);
+        public abstract DatabaseInfo GetDatabaseInfo(string serverName, string databaseName);
 
         /// <inheritdoc/>
         public DataSourceType DataSourceType { get; protected set; }
@@ -95,8 +111,7 @@ namespace Microsoft.Kusto.ServiceLayer.DataSource
         /// <inheritdoc/>
         public abstract string ClusterName { get; }
 
-        public abstract string DatabaseName { get; }
-        public abstract GlobalState SchemaState { get; }
+        public abstract string DatabaseName { get; set; }
 
         #endregion
     }

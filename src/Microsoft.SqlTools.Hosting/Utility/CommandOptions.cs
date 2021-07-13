@@ -5,7 +5,6 @@
 
 using System;
 using System.Globalization;
-using System.IO;
 
 namespace Microsoft.SqlTools.Hosting.Utility
 {
@@ -61,6 +60,9 @@ namespace Microsoft.SqlTools.Hosting.Utility
                             case "-help":
                                 ShouldExit = true;
                                 return;
+                            case "-service-name":
+                                ServiceName = args[++i];
+                                break;
                             default:
                                 ErrorMessage += string.Format("Unknown argument \"{0}\"" + Environment.NewLine, argName);
                                 break;
@@ -148,7 +150,7 @@ namespace Microsoft.SqlTools.Hosting.Utility
         /// culture-specific messages
         /// </summary>
         /// <param name="locale"></param>
-        internal void LocaleSetter(string locale)
+        public void LocaleSetter(string locale)
         {
             // Creating cultureInfo from our given locale
             CultureInfo language = new CultureInfo(locale);

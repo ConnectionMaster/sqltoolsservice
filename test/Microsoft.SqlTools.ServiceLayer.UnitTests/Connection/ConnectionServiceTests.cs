@@ -64,7 +64,7 @@ namespace Microsoft.SqlTools.ServiceLayer.UnitTests.Connection
 
             // Given a connection that times out and responds to cancellation
             var mockConnection = new Mock<DbConnection> { CallBase = true };
-            CancellationToken token;
+            CancellationToken token = new CancellationToken();
             bool ready = false;
             mockConnection.Setup(x => x.OpenAsync(It.IsAny<CancellationToken>()))
                 .Callback<CancellationToken>(t =>
@@ -125,7 +125,7 @@ namespace Microsoft.SqlTools.ServiceLayer.UnitTests.Connection
 
             // Given a connection that times out and responds to cancellation
             var mockConnection = new Mock<DbConnection> { CallBase = true };
-            CancellationToken token;
+            CancellationToken token = new CancellationToken();
             bool ready = false;
             mockConnection.Setup(x => x.OpenAsync(It.IsAny<CancellationToken>()))
                 .Callback<CancellationToken>(t =>
@@ -193,7 +193,7 @@ namespace Microsoft.SqlTools.ServiceLayer.UnitTests.Connection
 
             // Given a connection that times out and responds to cancellation
             var mockConnection = new Mock<DbConnection> { CallBase = true };
-            CancellationToken token;
+            CancellationToken token = new CancellationToken();
             bool ready = false;
             mockConnection.Setup(x => x.OpenAsync(It.IsAny<CancellationToken>()))
                 .Callback<CancellationToken>(t =>
@@ -1662,6 +1662,17 @@ namespace Microsoft.SqlTools.ServiceLayer.UnitTests.Connection
 
             // Then the connection factory got called with details including an account token
             mockFactory.Verify(factory => factory.CreateSqlConnection(It.IsAny<string>(), It.Is<string>(accountToken => accountToken == azureAccountToken)), Times.Once());
+        }
+
+        /// <summary>
+        /// Test is IsDbPool method correctly works for various database names
+        /// </summary>
+        [Test]
+        public void CheckIsDbPool()
+        {
+            Assert.IsTrue(ConnectionService.IsDbPool("db@pool"));
+            Assert.IsFalse(ConnectionService.IsDbPool("db"));
+            Assert.IsFalse(ConnectionService.IsDbPool(null));
         }
     }
 }
